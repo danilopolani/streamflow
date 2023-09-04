@@ -1,0 +1,6 @@
+const path = require('node:path');
+
+module.exports = {
+  'models-path': path.resolve('packages', 'main', 'src', 'database', 'models'),
+  'migrations-path': path.resolve('packages', 'main', 'src', 'database', 'migrations'),
+};

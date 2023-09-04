@@ -1,0 +1,6 @@
+{
+  "plugins": ["@typescript-eslint", "codegen"],
+  "rules": {
+    "codegen/codegen": "error"
+  }
+}

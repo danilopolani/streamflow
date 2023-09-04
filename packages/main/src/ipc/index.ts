@@ -1,0 +1,46 @@
+import { ipcMain } from 'electron';
+import obsConnect from './obs/connect';
+import obsDisconnect from './obs/disconnect';
+import obsGetSettings from './obs/get-settings';
+import openUrl from './open-url';
+import workflowActionCreate from './actions/create';
+import workflowActionUpdate from './actions/update';
+import workflowActionDelete from './actions/delete';
+import workflowActionList from './actions/list';
+import workflowTriggerCreate from './workflowTriggers/create';
+import workflowTriggerUpdate from './workflowTriggers/update';
+import workflowTriggerDelete from './workflowTriggers/delete';
+import workflowTriggerList from './workflowTriggers/list';
+import workflowCount from './workflows/count';
+import workflowCreate from './workflows/create';
+import workflowDelete from './workflows/delete';
+import workflowList from './workflows/list';
+import workflowRun from './workflows/run';
+import workflowLogList from './workflowLogs/list';
+import { twitchDisconnect, twitchGetSettings } from './twitch';
+import { generalGetSettings, generalUpdateSettings } from './general';
+
+export function handleIpc() {
+  ipcMain.handle('open-url', openUrl);
+  ipcMain.handle('general:getSettings', generalGetSettings);
+  ipcMain.handle('general:updateSettings', generalUpdateSettings);
+  ipcMain.handle('obs:connect', obsConnect);
+  ipcMain.handle('obs:disconnect', obsDisconnect);
+  ipcMain.handle('obs:getSettings', obsGetSettings);
+  ipcMain.handle('twitch:disconnect', twitchDisconnect);
+  ipcMain.handle('twitch:getSettings', twitchGetSettings);
+  ipcMain.handle('workflow:count', workflowCount);
+  ipcMain.handle('workflow:list', workflowList);
+  ipcMain.handle('workflow:create', workflowCreate);
+  ipcMain.handle('workflow:delete', workflowDelete);
+  ipcMain.handle('workflow:run', workflowRun);
+  ipcMain.handle('workflow-action:list', workflowActionList);
+  ipcMain.handle('workflow-action:create', workflowActionCreate);
+  ipcMain.handle('workflow-action:update', workflowActionUpdate);
+  ipcMain.handle('workflow-action:delete', workflowActionDelete);
+  ipcMain.handle('workflow-trigger:list', workflowTriggerList);
+  ipcMain.handle('workflow-trigger:create', workflowTriggerCreate);
+  ipcMain.handle('workflow-trigger:update', workflowTriggerUpdate);
+  ipcMain.handle('workflow-trigger:delete', workflowTriggerDelete);
+  ipcMain.handle('workflow-log:list', workflowLogList);
+}

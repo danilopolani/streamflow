@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "sourceMap": false,
+    "moduleResolution": "Node",
+    "skipLibCheck": true,
+    "strict": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "#preload": ["../preload/src/index"],
+      "/@/*": ["./src/*"],
+      "~shared": ["../shared"],
+      "~shared/*": ["../shared/*"],
+    },
+    "lib": ["ESNext", "dom", "dom.iterable"],
+    "allowSyntheticDefaultImports": true
+  },
+  "include": [
+    "src/**/*.vue",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "types/**/*.d.ts",
+    "../../types/**/*.d.ts",
+    "../shared/**/*.ts"
+  ],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+}
