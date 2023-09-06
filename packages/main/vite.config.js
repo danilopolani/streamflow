@@ -1,9 +1,12 @@
 import { join } from 'node:path';
+import { loadEnv } from 'vite';
 import { node } from '../../.electron-vendors.cache.json';
 import { injectAppVersion } from '../../version/inject-app-version-plugin.mjs';
 
 const PACKAGE_ROOT = __dirname;
 const PROJECT_ROOT = join(PACKAGE_ROOT, '../..');
+
+const env = loadEnv(process.env.MODE, PROJECT_ROOT, '');
 
 /**
  * @type {import('vite').UserConfig}
@@ -40,6 +43,10 @@ const config = {
     },
     emptyOutDir: true,
     reportCompressedSize: false,
+  },
+  define: {
+    'process.env.TWITCH_CLIENT_ID': JSON.stringify(env.TWITCH_CLIENT_ID),
+    'process.env.TWITCH_CLIENT_SECRET': JSON.stringify(env.TWITCH_CLIENT_SECRET),
   },
   plugins: [injectAppVersion()],
 };
