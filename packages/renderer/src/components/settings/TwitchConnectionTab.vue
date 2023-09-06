@@ -31,13 +31,13 @@ window.addEventListener('message', async (e: MessageEvent<WorkerMessage>) => {
       </n-button>
     </n-alert>
 
-    <template v-if="!settings?.userId">
+    <div v-if="!settings?.userId" class="my-auto text-center">
       <p class="text-xl text-slate-400 mb-10">No Twitch account linked yet.</p>
 
       <n-button type="primary" tag="a" :href="redirectUrl" target="_blank">
         Connect
       </n-button>
-    </template>
+    </div>
 
     <template v-else>
       <!-- Fake element to place the welcome back at center -->
