@@ -5,7 +5,7 @@ import { browserWindow } from './mainWindow';
 export const inWorkerContext = () => process.argv[2] === '--work';
 
 export const tellRenderer = (payload: Omit<WorkerMessage, 'forwardToRenderer'>) => {
-  browserWindow.webContents.send('messageToRenderer', payload);
+  browserWindow?.webContents.send('messageToRenderer', payload);
 };
 
 export const tellMain = (subject: string, extra?: Partial<Omit<WorkerMessage, 'subject'>>) => {

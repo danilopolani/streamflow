@@ -69,30 +69,22 @@ app
 
     appIcon.on('click', () => browserWindow.show());
     appIcon.setContextMenu(contextMenu);
+    appIcon.setToolTip('Streamflow');
   })
   .then(() => HttpServer.init())
   .then(() => WorkflowQueue.spawn())
   .then(() => Twitch.init(process.env.TWITCH_CLIENT_ID!, process.env.TWITCH_CLIENT_SECRET!).connect())
   .then(() => OBSWebSocket)
   .then(async () => {
+    if (!import.meta.env.PROD) {
+      return;
+    }
+
+    autoUpdater.logger = log;
+
     try {
-      autoUpdater.logger = log;
       await autoUpdater.checkForUpdatesAndNotify();
     } catch (err) {
-      console.error('Unable to fetch updates:', (err as Error).message);
+      console.error('Unable to fetch updates:', (err as Error).toString());
     }
   });
-
-/**
- * Check for new version of the application - production mode only.
- */
-if (import.meta.env.PROD) {
-  app
-    .whenReady()
-    .then(() => import('electron-updater'))
-    .then(module => {
-      const autoUpdater = module.autoUpdater || (module.default.autoUpdater as typeof module['autoUpdater']);
-      return autoUpdater.checkForUpdatesAndNotify();
-    })
-    .catch(e => console.error('Failed check updates:', e));
-}
