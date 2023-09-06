@@ -1,5 +1,4 @@
 import { Menu, Tray, app, nativeImage } from 'electron';
-import * as dotenv from 'dotenv';
 import { autoUpdater } from 'electron-updater';
 import { log } from './logger'; // Include it pretty soon to override console functions
 import { handleIpc } from './ipc';
@@ -12,11 +11,6 @@ import './securityRestrictions';
 import { Twitch } from './workers/Twitch';
 import { WorkflowQueue } from './workers/WorkflowQueue';
 import { trayIcon } from './images';
-
-// Needed to load secret env outside the VITE process
-dotenv.config({
-  path: import.meta.env.DEV ? './.env.local' : undefined,
-});
 
 /**
  * Prevent electron from running multiple instances.

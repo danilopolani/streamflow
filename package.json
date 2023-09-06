@@ -74,7 +74,6 @@
     "@twurple/auth": "^7.0.1",
     "@twurple/chat": "^7.0.1",
     "@twurple/eventsub-ws": "^7.0.1",
-    "dotenv": "^16.3.1",
     "electron-log": "^5.0.0-beta.28",
     "electron-updater": "6.1.1",
     "lodash-es": "^4.17.21",
