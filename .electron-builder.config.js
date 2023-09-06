@@ -28,7 +28,7 @@ module.exports = async function () {
     },
 
     nsis: {
-      artifactName: 'Install Streamflow.${ext}',
+      artifactName: 'StreamflowSetup.${ext}',
       uninstallDisplayName: 'Streamflow',
     },
 
