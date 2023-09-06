@@ -1,6 +1,7 @@
 import { Menu, Tray, app, nativeImage } from 'electron';
 import * as dotenv from 'dotenv';
-import './logger'; // Include it pretty soon to override console functions
+import { autoUpdater } from 'electron-updater';
+import { log } from './logger'; // Include it pretty soon to override console functions
 import { handleIpc } from './ipc';
 import { browserWindow, restoreOrCreateWindow } from '/@/mainWindow';
 import { OBSWebSocket } from './workers/OBSWebSocket';
@@ -51,10 +52,11 @@ app.on('activate', restoreOrCreateWindow);
  */
 app
   .whenReady()
-  .then(async () => await firstTimeApp())
+  .then(() => initDatabase())
+  .then(firstTimeApp)
   .then(handleIpc)
   .then(restoreOrCreateWindow)
-  .catch(e => console.error('Failed create window:', e))
+  .catch((err) => console.error('Failed create window:', (err as Error).message))
   .then(() => {
     if (process.platform === 'win32') {
       app.setAppUserModelId('Streamflow');
@@ -67,23 +69,22 @@ app
 
     appIcon.on('click', () => browserWindow.show());
     appIcon.setContextMenu(contextMenu);
+    appIcon.setToolTip('Streamflow');
   })
-  .then(() => initDatabase())
   .then(() => HttpServer.init())
   .then(() => WorkflowQueue.spawn())
   .then(() => Twitch.init(process.env.TWITCH_CLIENT_ID!, process.env.TWITCH_CLIENT_SECRET!).connect())
-  .then(() => OBSWebSocket);
+  .then(() => OBSWebSocket)
+  .then(async () => {
+    if (!import.meta.env.PROD) {
+      return;
+    }
 
-/**
- * Check for new version of the application - production mode only.
- */
-if (import.meta.env.PROD) {
-  app
-    .whenReady()
-    .then(() => import('electron-updater'))
-    .then(module => {
-      const autoUpdater = module.autoUpdater || (module.default.autoUpdater as typeof module['autoUpdater']);
-      return autoUpdater.checkForUpdatesAndNotify();
-    })
-    .catch(e => console.error('Failed check updates:', e));
-}
+    autoUpdater.logger = log;
+
+    try {
+      await autoUpdater.checkForUpdatesAndNotify();
+    } catch (err) {
+      console.error('Unable to fetch updates:', (err as Error).toString());
+    }
+  });

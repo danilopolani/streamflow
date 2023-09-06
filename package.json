@@ -82,7 +82,6 @@
     "quickjs-emscripten": "^0.23.0",
     "sequelize": "^6.28.0",
     "sqlite3": "^5.1.4",
-    "umzug": "^3.3.1",
-    "uniqid": "^5.4.0"
+    "umzug": "^3.3.1"
   }
 }
