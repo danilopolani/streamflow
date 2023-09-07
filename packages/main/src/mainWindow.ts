@@ -32,7 +32,9 @@ async function createWindow() {
    * @see https://github.com/electron/electron/issues/25012 for the afford mentioned issue.
    */
   browserWindow.on('ready-to-show', () => {
-    if (!get<boolean>('startInTray') || get<boolean>('firstTimeInApp')) {
+    if (process.platform !== 'win32') {
+      browserWindow?.show();
+    } else if (!get<boolean>('startInTray') || get<boolean>('firstTimeInApp')) {
       browserWindow?.show();
     }
 

@@ -5,10 +5,11 @@ import { store } from '/@/store';
 import type { TwitchSettings } from '~shared/TwitchSettings';
 import type { WorkerMessage } from '~shared/WorkerMessage';
 import { ConnectionStatus, IntegrationConnectionStatus } from '~shared/enums/ConnectionStatus';
+import { HTTP_SERVER_PORT } from '~shared/global';
 import { twitchGetSettings, twitchDisconnect } from '#preload';
 
 const settings = ref<TwitchSettings>();
-const redirectUrl = `http://localhost:${import.meta.env.VITE_HTTP_SERVER_PORT}/auth/twitch/redirect`;
+const redirectUrl = `http://localhost:${HTTP_SERVER_PORT}/auth/twitch/redirect`;
 
 onMounted(async () => {
   settings.value = await twitchGetSettings();

@@ -18,8 +18,6 @@ interface ImportMetaEnv {
 
   /** Current app version */
   readonly VITE_APP_VERSION: string;
-
-  readonly VITE_HTTP_SERVER_PORT: number;
 }
 
 interface ImportMeta {

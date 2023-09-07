@@ -4,13 +4,14 @@ import { URL } from 'node:url';
 import crypto from 'node:crypto';
 import { Twitch } from './workers/Twitch';
 import { log } from './logger';
+import { HTTP_SERVER_PORT } from '~shared/global';
 
 export class HttpServer {
   private twitchAuthState = '';
   private twitchRedirectUri: string;
 
   constructor() {
-    this.twitchRedirectUri = `http://localhost:${import.meta.env.VITE_HTTP_SERVER_PORT}/auth/twitch/callback`;
+    this.twitchRedirectUri = `http://localhost:${HTTP_SERVER_PORT}/auth/twitch/callback`;
 
     this.startServer();
   }
@@ -72,8 +73,8 @@ export class HttpServer {
       }
     });
 
-    server.listen(import.meta.env.VITE_HTTP_SERVER_PORT, 'localhost', function () {
-      log.silly('%c[HTTP Server] %cListening on http://localhost:' + import.meta.env.VITE_HTTP_SERVER_PORT, 'color: cyan', 'color: unset');
+    server.listen(HTTP_SERVER_PORT, 'localhost', function () {
+      log.silly('%c[HTTP Server] %cListening on http://localhost:' + HTTP_SERVER_PORT, 'color: cyan', 'color: unset');
     });
   }
 }

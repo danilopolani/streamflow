@@ -1,6 +1,6 @@
-import type { Session } from 'electron';
-import { app, shell } from 'electron';
+import { app, shell, type Session } from 'electron';
 import { URL } from 'node:url';
+import { HTTP_SERVER_PORT } from '~shared/global';
 
 /**
  * Union for all existing permissions in electron
@@ -33,7 +33,7 @@ const ALLOWED_ORIGINS_AND_PERMISSIONS = new Map<string, Set<Permission>>(
 const ALLOWED_EXTERNAL_ORIGINS = new Set([
   'https://github.com',
   'https://www.streamflow.app',
-  'http://localhost:' + import.meta.env.VITE_HTTP_SERVER_PORT,
+  'http://localhost:' + HTTP_SERVER_PORT,
 ]);
 
 app.on('web-contents-created', (_, contents) => {
