@@ -15,17 +15,19 @@ export const initDatabase = async (runMigrations = true) => {
     onDelete: 'CASCADE',
     hooks: true,
     as: 'actions',
+    foreignKey: 'workflowId',
   });
 
-  WorkflowAction.belongsTo(Workflow);
+  WorkflowAction.belongsTo(Workflow, { foreignKey: 'workflowId' });
 
   Workflow.hasMany(WorkflowTrigger, {
     onDelete: 'CASCADE',
     hooks: true,
     as: 'triggers',
+    foreignKey: 'workflowId',
   });
 
-  WorkflowTrigger.belongsTo(Workflow);
+  WorkflowTrigger.belongsTo(Workflow, { foreignKey: 'workflowId' });
 
   Workflow.hasMany(WorkflowLog, {
     onDelete: 'CASCADE',
@@ -34,8 +36,8 @@ export const initDatabase = async (runMigrations = true) => {
     foreignKey: 'workflowId',
   });
 
-  WorkflowLog.belongsTo(Workflow, { as: 'workflow' });
-  WorkflowLog.belongsTo(WorkflowTrigger, { as: 'trigger' });
+  WorkflowLog.belongsTo(Workflow, { as: 'workflow', foreignKey: 'workflowId' });
+  WorkflowLog.belongsTo(WorkflowTrigger, { as: 'trigger', foreignKey: 'workflowId' });
 
   log.info('%c[Database] %cInitialized', 'color: cyan', 'color: unset');
 };
