@@ -45,7 +45,6 @@
     "cross-env": "7.0.3",
     "electron": "25.4.0",
     "electron-builder": "24.6.3",
-    "electron-rebuild": "^3.2.9",
     "eslint": "8.30.0",
     "eslint-plugin-codegen": "^0.17.0",
     "eslint-plugin-unused-imports": "^3.0.0",

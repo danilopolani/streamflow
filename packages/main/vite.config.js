@@ -6,7 +6,10 @@ import { injectAppVersion } from '../../version/inject-app-version-plugin.mjs';
 const PACKAGE_ROOT = __dirname;
 const PROJECT_ROOT = join(PACKAGE_ROOT, '../..');
 
-const env = loadEnv(process.env.MODE, PROJECT_ROOT, '');
+const env = {
+  ...process.env,
+  ...loadEnv(process.env.MODE, PROJECT_ROOT, ''),
+};
 
 /**
  * @type {import('vite').UserConfig}
