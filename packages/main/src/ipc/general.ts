@@ -13,7 +13,10 @@ export async function generalUpdateSettings(_event: Electron.IpcMainInvokeEvent|
     value: data,
   });
 
-  app.setLoginItemSettings({
-    openAtLogin: data.openOnStartup,
-  });
+  // Avoid opening at startup a weird electron app
+  if (import.meta.env.PROD) {
+    app.setLoginItemSettings({
+      openAtLogin: data.openOnStartup,
+    });
+  }
 }
