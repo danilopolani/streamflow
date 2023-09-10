@@ -1,6 +1,6 @@
-import { actionKey, actionName, QueueToMainSubject, type ActionOptions } from '~shared/actions/twitch/reply';
+import { actionKey, actionName, type ActionOptions } from '~shared/actions/twitch/reply';
 import { Twitch } from '/@/workers/Twitch';
-import { compileTemplate, inWorkerContext, tellMain } from '/@/helpers';
+import { compileTemplate } from '/@/helpers';
 import { Action } from '../Action';
 
 
@@ -19,24 +19,12 @@ export const TwitchReply = new class extends Action {
   async run(previousOptions: PreviousOptions, actionOptions: ActionOptions): Promise<object> {
     const messageText = compileTemplate(actionOptions.text, previousOptions);
 
-    const execArgs = [
+    await Twitch.getChatClient()?.say(
       previousOptions.triggerChannel,
       messageText,
       { replyTo: previousOptions.triggerMessageId },
-    ];
-
-    if (inWorkerContext()) {
-      tellMain(QueueToMainSubject, {
-        message: JSON.stringify(execArgs),
-      });
-    } else {
-      await this.exec(...execArgs as [string, string, object]);
-    }
+    );
 
     return previousOptions;
-  }
-
-  async exec(...args: [string, string, object]) {
-    return Twitch.getChatClient()?.say(...args);
   }
 };

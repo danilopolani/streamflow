@@ -1,5 +1,5 @@
-import { actionKey, actionName, QueueToMainSubject, type ActionOptions } from '~shared/actions/obs/mute';
-import { compileTemplate, inWorkerContext, tellMain } from '/@/helpers';
+import { actionKey, actionName, type ActionOptions } from '~shared/actions/obs/mute';
+import { compileTemplate } from '/@/helpers';
 import { Action } from '../Action';
 import { OBSWebSocket } from '/@/workers/OBSWebSocket';
 
@@ -13,20 +13,8 @@ export const ObsMute = new class extends Action {
   public name = actionName;
 
   async run(previousOptions: PreviousOptions, actionOptions: ActionOptions): Promise<object> {
-    const source = compileTemplate(actionOptions.source, previousOptions);
-
-    if (inWorkerContext()) {
-      tellMain(QueueToMainSubject, {
-        message: source,
-      });
-    } else {
-      await this.exec(source);
-    }
+    await OBSWebSocket.mute(compileTemplate(actionOptions.source, previousOptions));
 
     return previousOptions;
-  }
-
-  async exec(source: string) {
-    return OBSWebSocket.mute(source);
   }
 };

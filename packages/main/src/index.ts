@@ -51,7 +51,8 @@ app
   .then(handleIpc)
   .then(restoreOrCreateWindow)
   .catch((err) => console.error('Failed create window:', (err as Error).message))
-  .then(() => {
+  .then(async () => {
+    // Set icon tray
     if (process.platform === 'win32') {
       app.setAppUserModelId('Streamflow');
     }
@@ -64,21 +65,21 @@ app
     appIcon.on('click', () => browserWindow.show());
     appIcon.setContextMenu(contextMenu);
     appIcon.setToolTip('Streamflow');
-  })
-  .then(() => HttpServer.init())
-  .then(() => WorkflowQueue.spawn())
-  .then(() => Twitch.init(process.env.TWITCH_CLIENT_ID!, process.env.TWITCH_CLIENT_SECRET!).connect())
-  .then(() => OBSWebSocket)
-  .then(async () => {
-    if (!import.meta.env.PROD) {
-      return;
-    }
 
-    autoUpdater.logger = log;
+    // Init services
+    HttpServer.init();
+    WorkflowQueue.init();
+    Twitch.init(process.env.TWITCH_CLIENT_ID!, process.env.TWITCH_CLIENT_SECRET!).connect();
+    OBSWebSocket;
 
-    try {
-      await autoUpdater.checkForUpdatesAndNotify();
-    } catch (err) {
-      console.error('Unable to fetch updates:', (err as Error).toString());
+    // Auto updater
+    if (import.meta.env.PROD) {
+      autoUpdater.logger = log;
+
+      try {
+        await autoUpdater.checkForUpdatesAndNotify();
+      } catch (err) {
+        console.error('Unable to fetch updates:', (err as Error).toString());
+      }
     }
   });
