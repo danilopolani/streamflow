@@ -5,6 +5,14 @@ import { browserWindow } from './mainWindow';
 export const inWorkerContext = () => process.argv[2] === '--work';
 
 export const tellRenderer = (payload: Omit<WorkerMessage, 'forwardToRenderer'>) => {
+  if (payload.message) {
+    payload.message = redactSecrets(payload.message);
+  }
+
+  if (payload.details) {
+    payload.details = redactSecrets(payload.details);
+  }
+
   browserWindow?.webContents.send('messageToRenderer', payload);
 };
 
@@ -50,3 +58,7 @@ export const execLambda = async (code: string) => {
 
   return result;
 };
+
+export const redactSecrets = (value: string) => value
+  .replace(process.env.TWITCH_CLIENT_ID!, '***')
+  .replace(process.env.TWITCH_CLIENT_SECRET!, '***');
