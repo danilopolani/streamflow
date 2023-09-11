@@ -1,5 +1,6 @@
 import { Menu, Tray, app, nativeImage } from 'electron';
 import { autoUpdater } from 'electron-updater';
+import * as Sentry from '@sentry/electron';
 import { log } from './logger'; // Include it pretty soon to override console functions
 import { handleIpc } from './ipc';
 import { browserWindow, restoreOrCreateWindow } from '/@/mainWindow';
@@ -11,6 +12,22 @@ import './securityRestrictions';
 import { Twitch } from './workers/Twitch';
 import { WorkflowQueue } from './workers/WorkflowQueue';
 import { trayIcon } from './images';
+
+if (import.meta.env.VITE_SENTRY_DSN) {
+  Sentry.init({
+    dsn: import.meta.env.VITE_SENTRY_DSN,
+    async beforeSend(event) {
+      const twitchSettings = await Twitch.getSettings();
+
+      event.extra = { 'OBS Version': 'Foo' };
+      event.user = {
+        username: twitchSettings?.value.userName,
+      };
+
+      return event;
+    },
+  });
+}
 
 /**
  * Prevent electron from running multiple instances.

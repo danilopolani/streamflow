@@ -89,7 +89,7 @@ export const Twitch = new class {
    * Connect to Twitch.
    */
   async connect() {
-    this.settings = (await (Setting<TwitchSettings>).findByPk(SettingName.TwitchAuth)) || undefined;
+    this.settings = (await this.getSettings()) || undefined;
 
     if (!this.settings) {
       tellRenderer({
@@ -206,6 +206,10 @@ export const Twitch = new class {
     this.eventSubClient.onChannelRewardAdd(this.settings.value.userId, this.refreshRewards.bind(this));
     this.eventSubClient.onChannelRewardUpdate(this.settings.value.userId, this.refreshRewards.bind(this));
     this.eventSubClient.onChannelRewardRemove(this.settings.value.userId, this.refreshRewards.bind(this));
+  }
+
+  async getSettings() {
+    return (Setting<TwitchSettings>).findByPk(SettingName.TwitchAuth);
   }
 
   private async refreshRewards() {
