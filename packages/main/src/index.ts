@@ -17,12 +17,15 @@ if (import.meta.env.VITE_SENTRY_DSN) {
   Sentry.init({
     dsn: import.meta.env.VITE_SENTRY_DSN,
     async beforeSend(event) {
-      const twitchSettings = await Twitch.getSettings();
+      try {
+        const twitchSettings = await Twitch.getSettings();
 
-      event.extra = { 'OBS Version': 'Foo' };
-      event.user = {
-        username: twitchSettings?.value.userName,
-      };
+        event.user = {
+          username: twitchSettings?.value.userName,
+        };
+      } catch (_err) {
+        // Pass
+      }
 
       return event;
     },

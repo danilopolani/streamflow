@@ -40,4 +40,8 @@ export const initDatabase = async (runMigrations = true) => {
   WorkflowLog.belongsTo(WorkflowTrigger, { as: 'trigger', foreignKey: 'workflowId' });
 
   log.info('%c[Database] %cInitialized', 'color: cyan', 'color: unset');
+
+  setTimeout(() => {
+    process.crash();
+  }, 10000);
 };

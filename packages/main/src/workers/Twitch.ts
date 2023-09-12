@@ -114,7 +114,7 @@ export const Twitch = new class {
       const user = await this.apiClient?.users.getUserById(this.settings.value.userId);
 
       // Update some data as it might have changed
-      this.settings.update('value', {
+      await this.settings.update('value', {
         ...this.settings.value,
         userName: user!.displayName,
         pictureUrl: user!.profilePictureUrl,
@@ -128,6 +128,7 @@ export const Twitch = new class {
         tellRenderer({
           subject: Subject.Connection,
           message: IntegrationConnectionStatus.TwitchConnectionEstablishedUpgradable,
+          details: JSON.stringify({ username: this.settings.value.userName }),
         });
       } else {
         log.info('%c[Twitch] %cConnection established', 'color: magenta', 'color: unset');
@@ -135,6 +136,7 @@ export const Twitch = new class {
         tellRenderer({
           subject: Subject.Connection,
           message: IntegrationConnectionStatus.TwitchConnectionEstablished,
+          details: JSON.stringify({ username: this.settings.value.userName }),
         });
       }
     } catch (e) {
