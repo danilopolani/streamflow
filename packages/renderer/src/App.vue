@@ -79,13 +79,25 @@ onMounted(() => {
         }
         break;
 
-      case IntegrationConnectionStatus.TwitchConnectionEstablished:
+      case IntegrationConnectionStatus.TwitchConnectionEstablished: {
         store.connectionStatus.twitch = ConnectionStatus.Established;
-        break;
 
-      case IntegrationConnectionStatus.TwitchConnectionEstablishedUpgradable:
-        store.connectionStatus.twitch = ConnectionStatus.Upgradable;
+        twitch.$patch({
+          username: JSON.parse(e.data.details!).username,
+        });
+
         break;
+      }
+
+      case IntegrationConnectionStatus.TwitchConnectionEstablishedUpgradable: {
+        store.connectionStatus.twitch = ConnectionStatus.Upgradable;
+
+        twitch.$patch({
+          username: JSON.parse(e.data.details!).username,
+        });
+
+        break;
+      }
     }
   });
 });

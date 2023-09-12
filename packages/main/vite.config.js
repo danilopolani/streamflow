@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import { join } from 'node:path';
 import { loadEnv } from 'vite';
 import { node } from '../../.electron-vendors.cache.json';
@@ -19,15 +20,17 @@ const config = {
   mode: process.env.MODE,
   root: PACKAGE_ROOT,
   envDir: PROJECT_ROOT,
+
   resolve: {
     alias: {
       '/@/': join(PACKAGE_ROOT, 'src') + '/',
       '~shared/': join(PACKAGE_ROOT, '..', 'shared') + '/',
     },
   },
+
   build: {
     ssr: true,
-    sourcemap: 'inline',
+    sourcemap: true,
     target: `node${node}`,
     outDir: 'dist',
     assetsDir: '.',
@@ -35,7 +38,6 @@ const config = {
     lib: {
       entry: [
         'src/index.ts',
-        'src/workers/WorkflowQueue.ts',
       ],
       formats: ['cjs'],
     },
@@ -47,11 +49,24 @@ const config = {
     emptyOutDir: true,
     reportCompressedSize: false,
   },
+
   define: {
     'process.env.TWITCH_CLIENT_ID': JSON.stringify(env.TWITCH_CLIENT_ID),
     'process.env.TWITCH_CLIENT_SECRET': JSON.stringify(env.TWITCH_CLIENT_SECRET),
   },
-  plugins: [injectAppVersion()],
+
+  plugins: [
+    injectAppVersion(),
+    sentryVitePlugin({
+      org: 'theraloss',
+      project: 'streamflow',
+      authToken: env.SENTRY_AUTH_TOKEN,
+      disable: env.DRY_RUN === 'true',
+      release: {
+        name: process.env.npm_package_version,
+      },
+    }),
+  ],
 };
 
 export default config;

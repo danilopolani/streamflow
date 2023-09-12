@@ -70,6 +70,8 @@
   },
   "dependencies": {
     "@nut-tree/nut-js": "^3.0.0",
+    "@sentry/electron": "^4.10.0",
+    "@sentry/vite-plugin": "^2.7.1",
     "@twurple/api": "^7.0.1",
     "@twurple/auth": "^7.0.1",
     "@twurple/chat": "^7.0.1",

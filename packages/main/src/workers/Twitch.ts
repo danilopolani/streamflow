@@ -89,7 +89,7 @@ export const Twitch = new class {
    * Connect to Twitch.
    */
   async connect() {
-    this.settings = (await (Setting<TwitchSettings>).findByPk(SettingName.TwitchAuth)) || undefined;
+    this.settings = (await this.getSettings()) || undefined;
 
     if (!this.settings) {
       tellRenderer({
@@ -114,7 +114,7 @@ export const Twitch = new class {
       const user = await this.apiClient?.users.getUserById(this.settings.value.userId);
 
       // Update some data as it might have changed
-      this.settings.update('value', {
+      await this.settings.update('value', {
         ...this.settings.value,
         userName: user!.displayName,
         pictureUrl: user!.profilePictureUrl,
@@ -128,6 +128,7 @@ export const Twitch = new class {
         tellRenderer({
           subject: Subject.Connection,
           message: IntegrationConnectionStatus.TwitchConnectionEstablishedUpgradable,
+          details: JSON.stringify({ username: this.settings.value.userName }),
         });
       } else {
         log.info('%c[Twitch] %cConnection established', 'color: magenta', 'color: unset');
@@ -135,6 +136,7 @@ export const Twitch = new class {
         tellRenderer({
           subject: Subject.Connection,
           message: IntegrationConnectionStatus.TwitchConnectionEstablished,
+          details: JSON.stringify({ username: this.settings.value.userName }),
         });
       }
     } catch (e) {
@@ -206,6 +208,10 @@ export const Twitch = new class {
     this.eventSubClient.onChannelRewardAdd(this.settings.value.userId, this.refreshRewards.bind(this));
     this.eventSubClient.onChannelRewardUpdate(this.settings.value.userId, this.refreshRewards.bind(this));
     this.eventSubClient.onChannelRewardRemove(this.settings.value.userId, this.refreshRewards.bind(this));
+  }
+
+  async getSettings() {
+    return (Setting<TwitchSettings>).findByPk(SettingName.TwitchAuth);
   }
 
   private async refreshRewards() {

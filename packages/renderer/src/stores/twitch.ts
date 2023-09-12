@@ -4,6 +4,7 @@ import { type Reward } from '~shared/TwitchSettings';
 
 export const useTwitch = defineStore('twitch', () => {
   const rewards = ref<Reward[]>([]);
+  const username = ref<string>();
 
-  return { rewards };
+  return { rewards, username };
 });

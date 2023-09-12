@@ -57,3 +57,6 @@ thumbs.db
 # Editor-based Rest Client
 .idea/httpRequests
 /.idea/csv-plugin.xml
+
+# Sentry Auth Token
+.env.sentry-build-plugin
