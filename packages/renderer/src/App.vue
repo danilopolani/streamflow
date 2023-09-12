@@ -101,9 +101,6 @@ onMounted(() => {
     }
   });
 });
-
-// @ts-ignore
-myUndefinedFunction(); // eslint-disable-line
 </script>
 
 <template>
