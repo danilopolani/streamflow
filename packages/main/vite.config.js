@@ -12,6 +12,8 @@ const env = {
   ...loadEnv(process.env.MODE, PROJECT_ROOT, ''),
 };
 
+console.log(env);
+
 /**
  * @type {import('vite').UserConfig}
  * @see https://vitejs.dev/config/
@@ -61,7 +63,7 @@ const config = {
       org: 'theraloss',
       project: 'streamflow',
       authToken: env.SENTRY_AUTH_TOKEN,
-      disable: !env.UPLOAD_SOURCEMAPS,
+      disable: env.DRY_RUN === 'false' || env.DRY_RUN === false || env.DRY_RUN === '0' || env.DRY_RUN === 0,
       release: {
         name: process.env.npm_package_version,
       },
