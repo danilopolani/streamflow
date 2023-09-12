@@ -48,6 +48,7 @@ jobs:
           TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           VITE_SENTRY_DSN: ${{ vars.VITE_SENTRY_DSN }}
+          UPLOAD_SOURCEMAPS: ${{ !inputs.dry-run }}
 
       - name: Compile artifacts ${{ inputs.dry-run && '' || 'and upload them to github release' }}
         uses: nick-fields/retry@v2

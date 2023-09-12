@@ -65,6 +65,10 @@ const config = {
       org: 'theraloss',
       project: 'streamflow',
       authToken: env.SENTRY_AUTH_TOKEN,
+      sourcemaps: {
+        // Undefined = automatically discover them
+        assets: env.UPLOAD_SOURCEMAPS ? undefined : [],
+      },
       release: {
         name: process.env.npm_package_version,
       },
