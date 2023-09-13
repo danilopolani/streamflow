@@ -11,7 +11,7 @@ export default async function enqueueWorkflow(workflow: Workflow, trigger: Workf
     variables,
   });
 
-  if (workflow.shouldRunImmediately) {
+  if (workflow.skipsQueue) {
     runWorkflow(workflow.id, variables, log.id);
   } else {
     WorkflowQueue.enqueue(log);

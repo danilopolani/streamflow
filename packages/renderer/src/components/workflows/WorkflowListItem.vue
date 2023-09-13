@@ -70,7 +70,7 @@ const contextMenuOptions = new ContextMenu()
         {{ item.name }}
       </n-ellipsis>
 
-      <n-popover v-if="item.shouldRunImmediately" trigger="hover">
+      <n-popover v-if="item.skipsQueue" trigger="hover">
         <template #trigger>
           <n-icon-wrapper
             :size="24"

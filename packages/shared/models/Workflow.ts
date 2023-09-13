@@ -1,6 +1,6 @@
 export type Workflow = {
   id: string
   isDisabled: boolean
-  shouldRunImmediately: boolean
+  skipsQueue: boolean
   name: string
 }

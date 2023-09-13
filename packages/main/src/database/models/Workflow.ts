@@ -6,7 +6,7 @@ import { type WorkflowTrigger } from './WorkflowTrigger';
 class Workflow extends Model {
   declare id: string;
   declare isDisabled: boolean;
-  declare shouldRunImmediately: boolean;
+  declare skipsQueue: boolean;
   declare name: string;
   declare options: object;
   declare actions: WorkflowAction[];
@@ -24,7 +24,7 @@ Workflow.init({
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
-  shouldRunImmediately: {
+  skipsQueue: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },

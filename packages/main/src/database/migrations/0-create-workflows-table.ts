@@ -12,7 +12,7 @@ export const up = async ({ context: sequelize }: { context: QueryInterface }) =>
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    shouldRunImmediately: {
+    skipsQueue: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },

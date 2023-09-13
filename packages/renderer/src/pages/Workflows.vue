@@ -25,7 +25,7 @@ const showCreateFormModal = ref(false);
 const createFormRef = ref<FormInst>();
 const createFormModel = ref({
   name: '',
-  shouldRunImmediately: false,
+  skipsQueue: false,
 });
 
 const formValidationRules = {
@@ -62,7 +62,7 @@ const createWorkflow = async () => {
   // Empty the form
   createFormModel.value = {
     name: '',
-    shouldRunImmediately: false,
+    skipsQueue: false,
   };
 
   workflows.value.unshift(workflow);
@@ -188,12 +188,13 @@ const onTriggerDeleted = (id: string) => {
         <n-input v-model:value="createFormModel.name" />
       </n-form-item>
 
-      <n-form-item path="shouldRunImmediately" class="-mt-6">
-        <n-checkbox v-model:checked="createFormModel.shouldRunImmediately">
-          Should run immediately?
+      <n-form-item path="skipsQueue" class="-mt-6">
+        <n-checkbox v-model:checked="createFormModel.skipsQueue">
+          Skips queue
         </n-checkbox>
       </n-form-item>
-      <p class="-mt-6 text-xs text-slate-400 mb-10">If checked, the workflow queue will be skipped and it runs immediately</p>
+
+      <p class="-mt-6 text-xs text-slate-400 mb-10">If checked, it won't be enqueued but it will run immediately skipping the already queued workflows.</p>
     </n-form>
 
     <template #action>
