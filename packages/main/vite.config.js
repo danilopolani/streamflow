@@ -65,6 +65,9 @@ const config = {
       release: {
         name: process.env.npm_package_version,
       },
+      sourcemaps: {
+        assets: 'dist/**/*.cjs',
+      },
     }),
   ],
 };
