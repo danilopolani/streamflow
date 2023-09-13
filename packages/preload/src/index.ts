@@ -27,10 +27,7 @@ export async function generalUpdateSettings(data: GeneralSettings): Promise<void
 }
 
 export async function obsConnect(settings: ObsWebSocketConnection): Promise<string | undefined> {
-  return ipcRenderer.invoke('obs:connect', {
-    ...settings,
-    shouldConnect: true, // Force connection
-  } as ObsWebSocketSettings);
+  return ipcRenderer.invoke('obs:connect', settings);
 }
 
 export async function obsRetryConnection(): Promise<void> {

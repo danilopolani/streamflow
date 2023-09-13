@@ -90,7 +90,7 @@ app
     HttpServer.init();
     WorkflowQueue.init();
     Twitch.init(process.env.TWITCH_CLIENT_ID!, process.env.TWITCH_CLIENT_SECRET!).connect();
-    OBSWebSocket;
+    OBSWebSocket.init();
 
     // Auto updater
     if (import.meta.env.PROD) {

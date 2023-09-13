@@ -1,5 +1,4 @@
 export type ObsWebSocketSettings = {
-  shouldConnect: boolean
   host: string
   port: string
   password: string
@@ -8,7 +7,6 @@ export type ObsWebSocketSettings = {
 export type ObsWebSocketConnection = Pick<ObsWebSocketSettings, 'host' | 'port' | 'password'>;
 
 export const ObsWebSocketSettingsDefaults: ObsWebSocketSettings = {
-  shouldConnect: false,
   host: '127.0.0.1',
   port: '4455',
   password: '',

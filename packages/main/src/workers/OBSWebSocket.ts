@@ -17,6 +17,18 @@ export const OBSWebSocket = new class {
 
   constructor() {
     this.obs = new OBSWebSocketLib();
+  }
+
+  async init() {
+    this.settings = (await this.getSettings()) || undefined;
+
+    if (!this.settings) {
+      tellRenderer({
+        subject: ObsWebSocketSubject.Connection,
+        message: IntegrationConnectionStatus.ObsConnectionToConfigure,
+        details: 'Connection needs configuration',
+      });
+    }
 
     // Refresh app status check from time to time
     setInterval(() => this.verifyObsOpen(), 1000);
@@ -26,9 +38,9 @@ export const OBSWebSocket = new class {
    * Connect OBS WebSocket.
    */
   async connect(shouldNotifyError = true): Promise<string | undefined> {
-    this.settings = (await (Setting<ObsWebSocketSettings>).findByPk(SettingName.ObsAuth)) || undefined;
+    this.settings = (await this.getSettings()) || undefined;
 
-    if (!this.settings?.value.shouldConnect) {
+    if (!this.settings) {
       tellRenderer({
         subject: ObsWebSocketSubject.Connection,
         message: IntegrationConnectionStatus.ObsConnectionToConfigure,
@@ -94,6 +106,10 @@ export const OBSWebSocket = new class {
     await this.obs.call('SetInputMute', { inputName: source, inputMuted: false });
   }
 
+  async getSettings() {
+    return (Setting<ObsWebSocketSettings>).findByPk(SettingName.ObsAuth);
+  }
+
   private async verifyObsOpen() {
     // Avoid issues when this file is minified in actual workers such as WorkflowQueue
     if (inWorkerContext()) {
@@ -109,7 +125,7 @@ export const OBSWebSocket = new class {
     const isOpen = res.find((item) => item.name.toLocaleLowerCase().includes('obs')) !== undefined;
 
     // If app was closed and now is open, retrying connection
-    if (!this.isObsOpen && isOpen) {
+    if (!this.isObsOpen && isOpen && this.settings) {
       this.connect();
     }
 
