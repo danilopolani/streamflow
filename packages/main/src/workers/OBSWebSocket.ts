@@ -1,5 +1,4 @@
 const { default: OBSWebSocketLib } = require('obs-websocket-js');
-import { desktopCapturer } from 'electron';
 import type OBSWebSocketType from 'obs-websocket-js';
 import { log } from '/@/logger';
 import { Setting } from '../database/models/Setting';
@@ -13,10 +12,16 @@ export const OBSWebSocket = new class {
   private isDisconncting = false;
   private isObsOpen = false;
   private isConnected = false;
+  private isConnecting = false; // Triggered when waiting for the app process to start up
   private settings?: Setting<ObsWebSocketSettings>;
+  private psList?: (() => Promise<{ name: string }[]>);
 
   constructor() {
     this.obs = new OBSWebSocketLib();
+
+    import('ps-list').then(({ default: psList }) => {
+      this.psList = psList;
+    });
   }
 
   async init() {
@@ -121,15 +126,25 @@ export const OBSWebSocket = new class {
       return;
     }
 
-    const res = await desktopCapturer.getSources({ types: ['window', 'screen'] });
-    const isOpen = res.find((item) => item.name.toLocaleLowerCase().includes('obs')) !== undefined;
+    if (!this.psList || this.isConnecting) {
+      return;
+    }
+
+    const processes = await this.psList();
+    const isOpen = processes.find((process) => process.name.toLocaleLowerCase().includes('obs')) !== undefined;
 
     // If app was closed and now is open, retrying connection
     if (!this.isObsOpen && isOpen && this.settings) {
+      this.isConnecting = true;
+
+      // When process is detected, give time to app (3seconds) to open etc.
+      await new Promise((resolve) => setTimeout(resolve, 3 * 1000));
+
       this.connect();
     }
 
     this.isObsOpen = isOpen;
+    this.isConnecting = false;
 
     tellRenderer({
       subject: ObsWebSocketSubject.AppStatus,
