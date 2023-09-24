@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { useNotification, NButton } from 'naive-ui';
-import { onMounted } from 'vue';
+import { useNotification, NButton, NModal } from 'naive-ui';
+import { onMounted, ref } from 'vue';
 import { type Router, useRouter } from 'vue-router';
 import { type WorkerMessage } from '../../shared/WorkerMessage';
 import {
@@ -18,9 +18,11 @@ import { useTwitch } from './stores/twitch';
 import ContextMenu from '/@/components/ContextMenu.vue';
 import { ObsWebSocketSubject } from '~shared/ObsWebSocketSettings';
 import { TwitchSubject } from '~shared/TwitchSettings';
+import { FIRST_TIME_APP_SUBJECT } from '~shared/global';
 
 const APP_VERSION = import.meta.env.VITE_APP_VERSION;
 let router: Router;
+const showFirstTimeModal = ref(false);
 
 onMounted(() => {
   const notification = useNotification();
@@ -39,6 +41,11 @@ onMounted(() => {
         twitch.$patch({
           rewards: JSON.parse(e.data.message!),
         });
+
+        break;
+      }
+      case FIRST_TIME_APP_SUBJECT: {
+        showFirstTimeModal.value = true;
 
         break;
       }
@@ -105,6 +112,28 @@ onMounted(() => {
 
 <template>
   <context-menu />
+
+  <n-modal
+    :show="showFirstTimeModal"
+    :show-icon="false"
+    preset="dialog"
+    title="First time?"
+    transform-origin="center">
+    <div class="mb-6"></div>
+
+    <div class="!text-base">
+      <p class="mb-4">Welcome to <strong class="text-primary">Streamflow</strong>, the open-source toolkit for streamers!</p>
+      <p class="mb-2">Just a few things before getting started; you can change these behaviours in the app <strong>Settings</strong>.</p>
+      <ol class="list-disc pl-8">
+        <li>When you <strong>close the app</strong>, it will run in the background. You can force-close it in the tray icons</li>
+        <li>By default the app will <strong>open with your computer start up</strong> in the tray icon, so you don't open it manually!</li>
+      </ol>
+    </div>
+
+    <template #action>
+      <n-button type="primary" @click="showFirstTimeModal = false">Got it</n-button>
+    </template>
+  </n-modal>
 
   <main id="router-content">
     <router-view></router-view>

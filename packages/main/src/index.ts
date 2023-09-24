@@ -12,6 +12,9 @@ import './securityRestrictions';
 import { Twitch } from './workers/Twitch';
 import { WorkflowQueue } from './workers/WorkflowQueue';
 import { trayIcon } from './images';
+import { tellRenderer } from './helpers';
+import { get as generalStoreGet } from './stores/general';
+import { FIRST_TIME_APP_SUBJECT } from '~shared/global';
 
 if (import.meta.env.VITE_SENTRY_DSN) {
   Sentry.init({
@@ -72,6 +75,12 @@ app
   .then(restoreOrCreateWindow)
   .catch((err) => console.error('Failed create window:', (err as Error).message))
   .then(async () => {
+    if (generalStoreGet<boolean>('firstTimeInApp')) {
+      tellRenderer({
+        subject: FIRST_TIME_APP_SUBJECT,
+      });
+    }
+
     // Set icon tray
     if (process.platform === 'win32') {
       app.setAppUserModelId('Streamflow');

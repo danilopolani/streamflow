@@ -1,1 +1,3 @@
 export const HTTP_SERVER_PORT = 28591;
+
+export const FIRST_TIME_APP_SUBJECT = 'FIRST_TIME_APP';
