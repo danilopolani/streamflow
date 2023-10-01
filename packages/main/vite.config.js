@@ -61,7 +61,7 @@ const config = {
       org: 'theraloss',
       project: 'streamflow',
       authToken: env.SENTRY_AUTH_TOKEN,
-      disable: env.DRY_RUN === 'true',
+      disable: env.DRY_RUN === 'true' || process.env.MODE !== 'production',
       release: {
         name: process.env.npm_package_version,
       },
